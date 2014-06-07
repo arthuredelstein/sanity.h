@@ -34,6 +34,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
    auto r1 = range((int) 1, (int) 10, (double) 1.4);
    auto r2 = range((int) 1, (int) 30);
    auto r3 = map(range(30), times2);
+   auto c = contains(range(100), 50);
    return 0;
 }
 

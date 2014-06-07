@@ -16,9 +16,13 @@
 #include <vector>
 #include <functional>
 
-// __first(vec)__. Takes the first element in a vector.
+// __first(vec)__.
+// Returns the first element in a vector.
 template <typename A>
 A first(const std::vector<A>& input) {
+   if (input.empty()) {
+      throw std::exception("Vector is empty.");
+   }
    return input[0];
 }
 
@@ -27,6 +31,16 @@ A first(const std::vector<A>& input) {
 template <typename A>
 std::vector<A> rest(const std::vector<A>& input) {
    return std::vector<A>(input.begin() + 1, input.end());
+}
+
+// __last(vec)__.
+// Returns last element in a vector.
+template <typename A>
+A last(const std::vector<A>& input) {
+   if (input.empty()) {
+      throw std::exception("Vector is empty.");
+   }
+   return *(input.end() - 1);
 }
 
 // __map(vec, func)__.
@@ -48,7 +62,7 @@ auto map(const std::vector<IN>& input, const F& func) -> std::vector<decltype(fu
 template <typename OUT, typename IN, typename F>
 OUT reduce(const OUT& init, const std::vector<IN>& input, const F& func) {
    OUT memo = init;
-   for (IN element : input) {
+   for (const IN& element : input) {
       memo = func(memo, element);
    }
    return memo;
@@ -69,7 +83,7 @@ template <class ELEM, typename F>
 std::vector<ELEM> filter(const std::vector<ELEM>& input, const F& predicate) {
    static_assert(std::is_same<decltype(predicate(*(input.begin()))), bool>::value, "predicate must return a bool");
    std::vector<ELEM> result;
-   for (ELEM element : input) {
+   for (const ELEM& element : input) {
       if (predicate(element)) {
          result.push_back(element);
       }
@@ -83,6 +97,38 @@ std::vector<ELEM> filter(const std::vector<ELEM>& input, const F& predicate) {
 template <class ELEM, typename F>
 std::vector<ELEM> remove(const std::vector<ELEM>& input, const F& predicate) {
    return filter(input, [&](ELEM elem) { return !predicate(elem); } );
+}
+
+// __every(vec, predicate)__.
+// Returns true if for every value, predicate(value) == TRUE.
+template <class ELEM, typename F>
+bool every(const std::vector<ELEM>& input, const F& predicate) {
+   static_assert(std::is_same<decltype(predicate(*(input.begin()))), bool>::value, "predicate must return a bool");
+   for (const ELEM& element : input) {
+      if (!predicate(element)) {
+         return false;
+      }
+   }
+   return true;
+}
+
+// __any(vec, predicate)__.
+// Returns true if for any value, predicate(value) == TRUE.
+template <class ELEM, typename F>
+bool any(const std::vector<ELEM>& input, const F& predicate) {
+   return !every(input, [&](ELEM elem) {return !predicate(elem); } );
+}
+
+// __contains(vec, value)__.
+// Returns true if vec contains value.
+template <class ELEM, class VAL>
+bool contains(const std::vector<ELEM>& input, const VAL& value) {
+   for (const ELEM& element : input) {
+      if (element == value) {
+         return true;
+      }
+   }
+   return false;
 }
 
 // __range(start, end, step)__.
