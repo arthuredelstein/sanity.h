@@ -8,7 +8,7 @@
 // such as map, reduce, and filter. We use STL collections
 // and treat them as immutable.
 //
-// Heavily inspired by Underscore.js and Clojure.
+// Heavily inspired by Underscore.js, underscore.cpp and Clojure.
 //
 // (C) 2014 Arthur Edelstein, arthuredelstein@gmail.com
 // MIT License
@@ -16,6 +16,20 @@
 #include <vector>
 #include <functional>
 #include <algorithm>
+
+// __inc(x)__.
+// Increases x by 1.
+template <typename A>
+A inc(A x) {
+   return x + 1;
+}
+
+// __dec(x)__.
+// Decreases x by 1.
+template <typename A>
+A dec(A x) {
+   return x - 1;
+}
 
 // __first(vec)__.
 // Returns the first element in a vector.
@@ -94,8 +108,8 @@ ELEM maximum(const std::vector<ELEM>& input) {
 // __sort(vec, comparisonFunction)__.
 // Sorts the vec using comparisonFunction, least to greatest.
 template <typename ELEM, typename F>
-ELEM sort(const std::vector<ELEM>& input, const F& comparisonFunction) {
-   std::vector result(input);
+std::vector<ELEM> sort(const std::vector<ELEM>& input, const F& comparisonFunction) {
+   std::vector<ELEM> result(input);
    std::sort(result.begin(), result.end(), comparisonFunction);
    return result;
 }
@@ -103,9 +117,18 @@ ELEM sort(const std::vector<ELEM>& input, const F& comparisonFunction) {
 // __sort(vec)__.
 // Sorts the vec, least to greatest.
 template <typename ELEM>
-ELEM sort(const std::vector<ELEM>& input) {
-   std::vector result(input);
+std::vector<ELEM> sort(const std::vector<ELEM>& input) {
+   std::vector<ELEM> result(input);
    std::sort(result.begin(), result.end());
+   return result;
+}
+
+// __shuffle(vec)__.
+// Shuffles the vec elements in random order.
+template <typename ELEM>
+std::vector<ELEM> shuffle(const std::vector<ELEM>& input) {
+   std::vector<ELEM> result(input);
+   std::random_shuffle(result.begin(), result.end());
    return result;
 }
 
@@ -187,19 +210,5 @@ std::vector<A> range(A start, B end) {
 template <typename A>
 std::vector<long> range(A end) {
    return range((long) 0, end, 1);
-}
-
-// __inc(x)__.
-// Increases x by 1.
-template <typename A>
-A inc(A x) {
-   return x + 1;
-}
-
-// __dec(x)__.
-// Decreases x by 1.
-template <typename A>
-A dec(A x) {
-   return x - 1;
 }
 
