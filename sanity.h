@@ -228,6 +228,38 @@ long indexOf(const std::vector<A>& vec, const VAL& value) {
    return -1;
 }
 
+// __assoc(map, key, val)__.
+// Adds a key, val pair to a map.
+template <typename K, typename V>
+std::map<K, V> assoc(const std::map<K, V>& map, const K& key, const V& val) {
+   std::map<K, V> result(map);
+   result[key] = val;
+   return result;
+}
+
+// __dissoc(map, key)__.
+// Adds a key, val pair to a map.
+template <typename K, typename V>
+std::map<K, V> dissoc(const std::map<K, V>& map, const K& key) {
+   std::map<K, V> result(map);
+   delete result[key];
+   return result;
+}
+
+// __hasKey(map, key)__.
+// Returns true if map contains a key.
+template <typename K, typename V>
+bool hasKey(const std::map<K, V>& map, const K& key) {
+   return kmap.find(key) != kmap.end();
+}
+
+// __get(map, key)__.
+// Adds a key, val pair to a map.
+template <typename K, typename V>
+V get(const std::map<K, V>& map, const K& key, V value, V notFound) {
+   return hasKey(map, key) ? map[key] : notFound;
+}
+
 // __keys(map)__.
 // Returns the keys from a map.
 template <typename K, typename V>
@@ -285,13 +317,6 @@ std::map<K, V> merge(const std::map<K, V>& map1, const std::map<K, V>& map2) {
       result[kv.first] = kv.second;
    }
    return result;
-}
-
-// __hasKey(map, key)__.
-// Returns true if map contains a key.
-template <typename K, typename V>
-bool hasKey(const std::map<K, V>& map, const K& key) {
-   return kmap.find(key) != kmap.end();
 }
 
 // __renameKeys(map, kmap)__.
