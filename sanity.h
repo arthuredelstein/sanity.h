@@ -85,3 +85,27 @@ std::vector<ELEM> remove(const std::vector<ELEM>& input, const F& predicate) {
    return filter(input, [&](ELEM elem) { return !predicate(elem); } );
 }
 
+// __range(start, end, step)__.
+// Returns an arithmetic progression of numbers.
+template <typename A, typename B, typename C>
+auto range(A start, B end, C step) -> std::vector<decltype(start + step)> {
+   std::vector<decltype(start + step)> result;
+   for (decltype(start + step) i = start; i < end; i+=step) {
+      result.push_back(i);
+   }
+   return result;
+}
+
+// __range(start, end)__.
+// Returns an arithmetic progress of numbers, with steps of 1.
+template <typename A, typename B>
+std::vector<A> range(A start, B end) {
+   return range(start, end, 1);
+}
+
+// __range(end)__.
+// Returns an arithmetic progression of long integers starting with zero.
+template <typename A>
+std::vector<long> range(A end) {
+   return range((long) 0, end, 1);
+}
