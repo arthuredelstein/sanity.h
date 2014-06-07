@@ -19,20 +19,6 @@
 #include <algorithm>
 #include <random>
 
-// __inc(x)__.
-// Increases x by 1.
-template <typename A>
-A inc(A x) {
-   return x + 1;
-}
-
-// __dec(x)__.
-// Decreases x by 1.
-template <typename A>
-A dec(A x) {
-   return x - 1;
-}
-
 // __range(start, end, step)__.
 // Returns an arithmetic progression of numbers.
 template <typename A, typename B, typename C>
@@ -344,4 +330,91 @@ std::map<K, V> renameKeys(const std::map<K, V>& map, const std::map<K, K>& kmap)
          result[kv.first] = kv.second;
       }
    }
+}
+
+
+// ## Numerical functions.
+
+// __isEven(x)__.
+// Returns true if x is even.
+template <typename A>
+bool isEven(A x) {
+   return x % 2 == 0;
+}
+
+// __isOdd(x)__.
+// Returns true if x is odd.
+template <typename A>
+bool isOdd(A x) {
+   return !isEven(x);
+}
+
+// __isZero(x)__.
+// Returns true if x is zero.
+template <typename A>
+bool isZero(A x) {
+   return x == 0;
+}
+
+// __isPositive(x)__.
+// Returns true if x is more than zero.
+template <typename A>
+bool isPositive(A x) {
+   return x > 0;
+}
+
+// __isNegative(x)__.
+// Returns true if x is less than zero.
+template <typename A>
+bool isNegative(A x) {
+   return x < 0;
+}
+
+// __inc(x)__.
+// Increases x by 1.
+template <typename A>
+A inc(A x) {
+   return x + 1;
+}
+
+// __dec(x)__.
+// Decreases x by 1.
+template <typename A>
+A dec(A x) {
+   return x - 1;
+}
+
+// __add(a, b)__.
+// Returns a + b.
+template <typename A, typename B>
+auto add(A a, B b) -> decltype(a + b) {
+   return a + b;
+}
+
+// __subtract(a, b)__.
+// Returns a - b.
+template <typename A, typename B>
+auto subtract(A a, B b) -> decltype(a - b) {
+   return a - b;
+}
+
+// __multiply(a, b)__.
+// Returns a + b.
+template <typename A, typename B>
+auto multiply(A a, B b) -> decltype(a * b) {
+   return a * b;
+}
+
+// __divide(a, b)__.
+// Returns a - b.
+template <typename A, typename B>
+auto divide(A a, B b) -> decltype(a / b) {
+   return a / b;
+}
+
+// __modulo(a, b)__.
+// Returns a - b.
+template <typename A, typename B>
+auto modulo(A a, B b) -> decltype(a % b) {
+   return a % b;
 }
