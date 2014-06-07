@@ -36,6 +36,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
    auto r2 = range((int) 1, (int) 30);
    auto r3 = maximum(map(range(30), times2));
    auto c = contains(range(100), 50);
+   auto q = indexOf(shuffle(range(10000)), (long) 999);
    return 0;
 }
 

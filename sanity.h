@@ -16,6 +16,7 @@
 #include <vector>
 #include <functional>
 #include <algorithm>
+#include <random>
 
 // __inc(x)__.
 // Increases x by 1.
@@ -29,6 +30,31 @@ A inc(A x) {
 template <typename A>
 A dec(A x) {
    return x - 1;
+}
+
+// __range(start, end, step)__.
+// Returns an arithmetic progression of numbers.
+template <typename A, typename B, typename C>
+auto range(A start, B end, C step) -> std::vector<decltype(start + step)> {
+   std::vector<decltype(start + step)> result;
+   for (decltype(start + step) i = start; i < end; i+=step) {
+      result.push_back(i);
+   }
+   return result;
+}
+
+// __range(start, end)__.
+// Returns an arithmetic progress of numbers, with steps of 1.
+template <typename A, typename B>
+std::vector<A> range(A start, B end) {
+   return range(start, end, 1);
+}
+
+// __range(end)__.
+// Returns an arithmetic progression of long integers starting with zero.
+template <typename A>
+std::vector<long> range(A end) {
+   return range((long) 0, end, 1);
 }
 
 // __first(vec)__.
@@ -187,35 +213,10 @@ bool contains(const std::vector<ELEM>& input, const VAL& value) {
    return false;
 }
 
-// __range(start, end, step)__.
-// Returns an arithmetic progression of numbers.
-template <typename A, typename B, typename C>
-auto range(A start, B end, C step) -> std::vector<decltype(start + step)> {
-   std::vector<decltype(start + step)> result;
-   for (decltype(start + step) i = start; i < end; i+=step) {
-      result.push_back(i);
-   }
-   return result;
-}
-
-// __range(start, end)__.
-// Returns an arithmetic progress of numbers, with steps of 1.
-template <typename A, typename B>
-std::vector<A> range(A start, B end) {
-   return range(start, end, 1);
-}
-
-// __range(end)__.
-// Returns an arithmetic progression of long integers starting with zero.
-template <typename A>
-std::vector<long> range(A end) {
-   return range((long) 0, end, 1);
-}
-
 // __indexOf(vec, value)__.
 // Returns the integer index of the first occurence of value in vec.
-template <typename A>
-long indexOf(const std::vector<A>& vec, A value) {
+template <typename A, typename VAL>
+long indexOf(const std::vector<A>& vec, VAL value) {
    long i = 0;
    for (A elem : vec) {
       if (elem == value) {
