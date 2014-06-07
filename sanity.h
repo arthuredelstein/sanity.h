@@ -155,3 +155,18 @@ template <typename A>
 std::vector<long> range(A end) {
    return range((long) 0, end, 1);
 }
+
+// __inc(x)__.
+// Increases x by 1.
+template <typename A>
+A inc(A x) {
+   return x + 1;
+}
+
+// __dec(x)__.
+// Decreases x by 1.
+template <typename A>
+A dec(A x) {
+   return x - 1;
+}
+
