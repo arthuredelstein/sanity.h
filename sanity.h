@@ -399,21 +399,21 @@ auto subtract(A a, B b) -> decltype(a - b) {
 }
 
 // __multiply(a, b)__.
-// Returns a + b.
+// Returns a * b.
 template <typename A, typename B>
 auto multiply(A a, B b) -> decltype(a * b) {
    return a * b;
 }
 
 // __divide(a, b)__.
-// Returns a - b.
+// Returns a / b.
 template <typename A, typename B>
 auto divide(A a, B b) -> decltype(a / b) {
    return a / b;
 }
 
 // __modulo(a, b)__.
-// Returns a - b.
+// Returns a % b.
 template <typename A, typename B>
 auto modulo(A a, B b) -> decltype(a % b) {
    return a % b;
