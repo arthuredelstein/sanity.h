@@ -76,15 +76,15 @@ ELEM reduce(const std::vector<ELEM>& input, const F& func) {
    return reduce(first(input), rest(input), func);
 }
 
-// __min(vec)__.
+// __minimum(vec)__.
 template <typename ELEM>
-ELEM min(const std::vector<ELEM>& input) {
+ELEM minimum(const std::vector<ELEM>& input) {
    return reduce(input, [](ELEM a, ELEM b) { return a < b ? a : b; } );
 }
 
-// __max(vec)__.
+// __maximum(vec)__.
 template <typename ELEM>
-ELEM max(const std::vector<ELEM>& input) {
+ELEM maximum(const std::vector<ELEM>& input) {
    return reduce(input, [](ELEM a, ELEM b) { return a > b ? a : b; } );
 }
 
