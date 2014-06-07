@@ -217,7 +217,7 @@ bool contains(const std::vector<ELEM>& input, const VAL& value) {
 // __indexOf(vec, value)__.
 // Returns the integer index of the first occurence of value in vec.
 template <typename A, typename VAL>
-long indexOf(const std::vector<A>& vec, VAL value) {
+long indexOf(const std::vector<A>& vec, const VAL& value) {
    long i = 0;
    for (A elem : vec) {
       if (elem == value) {
@@ -228,10 +228,32 @@ long indexOf(const std::vector<A>& vec, VAL value) {
    return -1;
 }
 
+// __keys(map)__.
+// Returns the keys from a map.
+template <typename K, typename V>
+std::vector<K> keys(const std::map<K, V>& m) {
+   std::vector<K> result;
+   for (auto& kv : m) {
+      result.push_back(kv.first);
+   }
+   return result;
+}
+
+// __vals(map)__.
+// Returns the vals from a map.
+template <typename K, typename V>
+std::vector<V> vals(const std::map<K, V>& m) {
+   std::vector<V> result;
+   for (auto& kv : m) {
+      result.push_back(kv.second);
+   }
+   return result;
+}
+
 // __zipmap(keys, vals)__.
 // Returns a map using keys, vals.
 template <typename K, typename V>
-std::map<K, V> zipmap(std::vector<K> keys, std::vector<V> vals) {
+std::map<K, V> zipmap(const std::vector<K>& keys, const std::vector<V>& vals) {
    int n = keys.size();
    if (n != vals.size()) {
       throw std::exception("keys and vals vectors are different lengths");
@@ -246,10 +268,10 @@ std::map<K, V> zipmap(std::vector<K> keys, std::vector<V> vals) {
 // __merge(map1, map2)__.
 // Merge two maps. Keys from map2 overwrite any matching keys in map1.
 template <typename K, typename V>
-std::map<K, V> merge(std::map<K, V> map1, std::map<K, V> map2) {
+std::map<K, V> merge(const std::map<K, V>& map1, const std::map<K, V>& map2) {
    std::map<K, V> result(map1);
    for (auto& kv : map2) {
-      result[kv.first] = map2[kv.first];
+      result[kv.first] = kv.second;
    }
    return result;
 }
