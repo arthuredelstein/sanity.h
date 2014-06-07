@@ -14,6 +14,7 @@
 // MIT License
 
 #include <vector>
+#include <map>
 #include <functional>
 #include <algorithm>
 #include <random>
@@ -224,4 +225,31 @@ long indexOf(const std::vector<A>& vec, VAL value) {
       }
       ++i;
    }
+   return -1;
+}
+
+// __zipmap(keys, vals)__.
+// Returns a map using keys, vals.
+template <typename K, typename V>
+std::map<K, V> zipmap(std::vector<K> keys, std::vector<V> vals) {
+   int n = keys.size();
+   if (n != vals.size()) {
+      throw std::exception("keys and vals vectors are different lengths");
+   }
+   std::map<K, V> result;
+   for (int i = 0; i < keys.size(); ++i) {
+      result[keys[i]] = vals[i];
+   }
+   return result;
+}
+
+// __merge(map1, map2)__.
+// Merge two maps. Keys from map2 overwrite any matching keys in map1.
+template <typename K, typename V>
+std::map<K, V> merge(std::map<K, V> map1, std::map<K, V> map2) {
+   std::map<K, V> result(map1);
+   for (auto& kv : map2) {
+      result[kv.first] = map2[kv.first];
+   }
+   return result;
 }
