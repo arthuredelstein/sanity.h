@@ -228,6 +228,8 @@ long indexOf(const std::vector<A>& vec, const VAL& value) {
    return -1;
 }
 
+// ## Functions for manipulating Maps.
+
 // __assoc(map, key, val)__.
 // Adds a key, val pair to a map.
 template <typename K, typename V>
@@ -315,6 +317,17 @@ std::map<K, V> merge(const std::map<K, V>& map1, const std::map<K, V>& map2) {
    std::map<K, V> result(map1);
    for (auto& kv : map2) {
       result[kv.first] = kv.second;
+   }
+   return result;
+}
+
+// __mergeWith(function, map1, map2)__.
+// Merge two maps. If keys occur in both maps, then call function(v1, v2)
+template <typename K, typename V, typename F>
+std::map<K, V> mergeWith(const F& func, const std::map<K, V>& map1, const std::map<K, V>& map2) {
+   std::map<K, V> result(map1);
+   for (auto& kv2 : map2) {
+      result[kv2.first] = hasKey(map1, kv2.first) ? func(get(map1, kv2.first), kv2.second) : kv2.second;
    }
    return result;
 }
