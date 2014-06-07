@@ -250,6 +250,17 @@ std::vector<V> vals(const std::map<K, V>& m) {
    return result;
 }
 
+// __pairs(map)__.
+// Returns the [key, value] pairs from a map.
+template <typename K, typename V>
+std::vector<std::pair<K, V>> pairs(const std::map<K, V>& m) {
+   std::vector<std::pair<K, V>> result;
+   for (auto& kv : m) {
+      result.push_back(std::pair<K,V>(kv.first, kv.second));
+   }
+   return result;
+}
+
 // __zipmap(keys, vals)__.
 // Returns a map using keys, vals.
 template <typename K, typename V>
