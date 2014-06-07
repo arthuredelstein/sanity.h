@@ -286,3 +286,24 @@ std::map<K, V> merge(const std::map<K, V>& map1, const std::map<K, V>& map2) {
    }
    return result;
 }
+
+// __hasKey(map, key)__.
+// Returns true if map contains a key.
+template <typename K, typename V>
+bool hasKey(const std::map<K, V>& map, const K& key) {
+   return kmap.find(key) != kmap.end();
+}
+
+// __renameKeys(map, kmap)__.
+// Returns the map with the keys in kmap renamed to the vals in kmap.
+template <typename K, typename V>
+std::map<K, V> renameKeys(const std::map<K, V>& map, const std::map<K, K>& kmap) {
+   std::map<K, V> result;
+   for (auto& kv : map) {
+      if (hasKey(kmap, kv.first)) {
+         result[kmap[kv.first]] = kv.second;
+      } else {
+         result[kv.first] = kv.second;
+      }
+   }
+}
