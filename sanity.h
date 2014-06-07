@@ -15,6 +15,7 @@
 
 #include <vector>
 #include <functional>
+#include <algorithm>
 
 // __first(vec)__.
 // Returns the first element in a vector.
@@ -77,15 +78,35 @@ ELEM reduce(const std::vector<ELEM>& input, const F& func) {
 }
 
 // __minimum(vec)__.
+// Returns the minimum value in vec.
 template <typename ELEM>
 ELEM minimum(const std::vector<ELEM>& input) {
    return reduce(input, [](ELEM a, ELEM b) { return a < b ? a : b; } );
 }
 
 // __maximum(vec)__.
+// Returns the maximum value in vec.
 template <typename ELEM>
 ELEM maximum(const std::vector<ELEM>& input) {
    return reduce(input, [](ELEM a, ELEM b) { return a > b ? a : b; } );
+}
+
+// __sort(vec, comparisonFunction)__.
+// Sorts the vec using comparisonFunction, least to greatest.
+template <typename ELEM, typename F>
+ELEM sort(const std::vector<ELEM>& input, const F& comparisonFunction) {
+   std::vector result(input);
+   std::sort(result.begin(), result.end(), comparisonFunction);
+   return result;
+}
+
+// __sort(vec)__.
+// Sorts the vec, least to greatest.
+template <typename ELEM>
+ELEM sort(const std::vector<ELEM>& input) {
+   std::vector result(input);
+   std::sort(result.begin(), result.end());
+   return result;
 }
 
 // __filter(vec, predicate)__.
