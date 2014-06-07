@@ -76,6 +76,18 @@ ELEM reduce(const std::vector<ELEM>& input, const F& func) {
    return reduce(first(input), rest(input), func);
 }
 
+// __min(vec)__.
+template <typename ELEM>
+ELEM min(const std::vector<ELEM>& input) {
+   return reduce(input, [](ELEM a, ELEM b) { return a < b ? a : b; } );
+}
+
+// __max(vec)__.
+template <typename ELEM>
+ELEM max(const std::vector<ELEM>& input) {
+   return reduce(input, [](ELEM a, ELEM b) { return a > b ? a : b; } );
+}
+
 // __filter(vec, predicate)__.
 // Takes a vector of values and returns a vector
 // with only those values where predicate(value) == TRUE.
