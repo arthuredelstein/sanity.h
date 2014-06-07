@@ -212,3 +212,15 @@ std::vector<long> range(A end) {
    return range((long) 0, end, 1);
 }
 
+// __indexOf(vec, value)__.
+// Returns the integer index of the first occurence of value in vec.
+template <typename A>
+long indexOf(const std::vector<A>& vec, A value) {
+   long i = 0;
+   for (A elem : vec) {
+      if (elem == value) {
+         return i;
+      }
+      ++i;
+   }
+}
