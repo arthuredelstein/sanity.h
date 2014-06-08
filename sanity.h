@@ -18,6 +18,11 @@
 #include <functional>
 #include <algorithm>
 #include <random>
+#include <fstream>
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <regex>
 
 
 // __range(start, end, step)__.
@@ -356,6 +361,21 @@ A concat(const std::vector<A>& vec1, const std::vector<A>& vec2) {
    return result;
 }
 
+// __interleave(vec1, vec2)__.
+// Returns a vector of first item in each vector, then the second in each, etc.
+template <typename A>
+std::vector<A> interleave(std::vector<A> vec1, std::vector<A> vec2) {
+   std::vector<A> result;
+   int n1 = vec1.size();
+   int n2 = vec2.size();
+   int n = min(n1, n2);
+   for (int i = 0; i < n; ++i) {
+      result.push_back(vec1[i]);
+      result.push_back(vec2[i]);
+   }
+   return result;
+}
+
 // ## Functions for manipulating Maps.
 
 // __assoc(map, key, val)__.
@@ -558,4 +578,43 @@ auto divide(A a, B b) -> decltype(a / b) {
 template <typename A, typename B>
 auto modulo(A a, B b) -> decltype(a % b) {
    return a % b;
+}
+
+// ## Strings
+
+std::string str(const std::vector<std::string>& items) {
+   std::stringstream buffer;
+   for (std::string item : items) {
+      buffer << item;
+   }
+   return buffer.str();
+}
+
+std::vector<std::string> split(const std::string& input, const std::string& regex) {
+   std::vector<std::string> result;
+   std::sregex_token_iterator iter(input.begin(), input.end(), std::regex(regex), -1);
+   std::sregex_token_iterator end;
+   for (; iter != end; ++iter) {
+      result.push_back(*iter);
+   }
+   return result;
+}
+
+// ## I/O
+
+// __spit(file, content)__.
+// Write a string to a file.
+void spit(const std::string& file, const std::string& content) {
+   std::ofstream out(file);
+   out << content;
+   out.close();
+}
+
+// __slurp(file)__.
+// Read a string from a file.
+std::string slurp(const std::string& file) {
+   std::ifstream input("file.txt");
+   std::stringstream buffer;
+   buffer << input.rdbuf();
+   return buffer.str();
 }
