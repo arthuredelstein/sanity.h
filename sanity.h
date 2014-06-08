@@ -50,103 +50,104 @@ std::vector<long> range(A end) {
    return range((long) 0, end, 1);
 }
 
-// __first(vec)__.
-// Returns the first element in a vector.
-template <typename A>
-A first(const std::vector<A>& input) {
+// __first(coll)__.
+// Returns the first element in a collection.
+template <typename C>
+auto first(const C& input) -> decltype(input[0]) {
    if (input.empty()) {
-      throw std::exception("Vector is empty.");
+      throw std::exception("Collection is empty.");
    }
    return input[0];
 }
 
-// __rest(vec)__.
-// Takes all but the first element in a vector.
-template <typename A>
-std::vector<A> rest(const std::vector<A>& input) {
-   return std::vector<A>(input.begin() + 1, input.end());
+// __rest(coll)__.
+// Takes all but the first element in a collection.
+template <typename C>
+C rest(const C& coll) {
+   return C(coll.begin() + 1, coll.end());
 }
 
-// __last(vec)__.
-// Returns last element in a vector.
-template <typename A>
-A last(const std::vector<A>& input) {
-   if (input.empty()) {
+// __last(coll)__.
+// Returns last element in a collection.
+template <typename C>
+auto last(const C& coll) -> decltype(*(coll.end())) {
+   if (coll.empty()) {
       throw std::exception("Vector is empty.");
    }
-   return *(input.end() - 1);
+   return *(coll.end() - 1);
 }
 
-// __map(vec, func)__.
-// Takes a vector of values of type IN, applies a 
+// __map(coll, func)__.
+// Takes a collection of values of type IN, applies a 
 // function to each of those values and produces a new vector
 // with the results.
-template <typename IN, typename F>
-auto map(const std::vector<IN>& input, const F& func) -> std::vector<decltype(func(*(input.begin())))> {
+template <typename C, typename F>
+auto map(const C& input, const F& func) -> std::vector<decltype(func(*(input.begin())))> {
    std::vector<decltype(func(*(input.begin())))> result;
-   for (IN element : input) {
+   for (auto element : input) {
       result.push_back(func(element));
    }
    return result;
 }
 
-// __reduce(init, vec, func)__.
-// Takes an initial value of type OUT, an vector with elements of type IN,
+// __reduce(init, coll, func)__.
+// Takes an initial value of type OUT, an collection
 // and a func with two arguments: func(OUT, IN).
-template <typename OUT, typename IN, typename F>
-OUT reduce(const OUT& init, const std::vector<IN>& input, const F& func) {
+template <typename OUT, typename C, typename F>
+OUT reduce(const OUT& init, const C& coll, const F& func) {
    OUT memo = init;
-   for (const IN& element : input) {
+   for (auto element : coll) {
       memo = func(memo, element);
    }
    return memo;
 }
 
-// __reduce(vec, func)__.
-// Takes a vector with elements of type ELEM, and a func that takes
-// two arguments, both of type ELEM and returns a result of type ELEM.
-template <typename ELEM, typename F>
-ELEM reduce(const std::vector<ELEM>& input, const F& func) {
-   return reduce(first(input), rest(input), func);
+// __reduce(coll, func)__.
+// Takes a collection a func that takes two arguments, both the same type.
+template <typename C, typename F>
+auto reduce(const C& coll, const F& func) -> decltype(first(coll)) {
+   return reduce(first(coll), rest(coll), func);
 }
 
-// __minimum(vec)__.
-// Returns the minimum value in vec.
-template <typename ELEM>
-ELEM minimum(const std::vector<ELEM>& input) {
-   return reduce(input, [](ELEM a, ELEM b) { return a < b ? a : b; } );
+// __minimum(coll)__.
+// Returns the minimum value in coll.
+template <typename C>
+auto minimum(const C& coll) -> decltype(first(coll)) {
+   typedef decltype(first(coll)) ELEM;
+   return reduce(coll, [](ELEM a, ELEM b) { return a < b ? a : b; } );
 }
 
-// __maximum(vec)__.
-// Returns the maximum value in vec.
-template <typename ELEM>
-ELEM maximum(const std::vector<ELEM>& input) {
-   return reduce(input, [](ELEM a, ELEM b) { return a > b ? a : b; } );
+// __maximum(coll)__.
+// Returns the maximum value in coll.
+template <typename C>
+auto maximum(const C& coll) -> decltype(first(coll)) {
+   typedef decltype(first(coll)) ELEM;
+   return reduce(coll, [](ELEM a, ELEM b) { return a > b ? a : b; } );
 }
 
-// __sort(vec, comparisonFunction)__.
-// Sorts the vec using comparisonFunction, least to greatest.
-template <typename ELEM, typename F>
-std::vector<ELEM> sort(const std::vector<ELEM>& input, const F& comparisonFunction) {
-   std::vector<ELEM> result(input);
+// __sort(coll, comparisonFunction)__.
+// Sorts the coll using comparisonFunction, least to greatest.
+template <typename C, typename F>
+C sort(const C& coll, const F& comparisonFunction) {
+   C result(coll);
    std::sort(result.begin(), result.end(), comparisonFunction);
    return result;
 }
 
-// __sort(vec)__.
-// Sorts the vec, least to greatest.
-template <typename ELEM>
-std::vector<ELEM> sort(const std::vector<ELEM>& input) {
-   std::vector<ELEM> result(input);
+// __sort(coll)__.
+// Sorts the coll, least to greatest.
+template <typename C>
+C sort(const C& coll) {
+   C result(coll);
    std::sort(result.begin(), result.end());
    return result;
 }
 
-// __shuffle(vec)__.
-// Shuffles the vec elements in random order.
-template <typename ELEM>
-std::vector<ELEM> shuffle(const std::vector<ELEM>& input) {
-   std::vector<ELEM> result(input);
+// __shuffle(coll)__.
+// Shuffles the coll elements in random order.
+template <typename C>
+C shuffle(const C& coll) {
+   C result(coll);
    std::random_shuffle(result.begin(), result.end());
    return result;
 }
