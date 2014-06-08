@@ -8,21 +8,21 @@
 // such as map, reduce, and filter. We use STL collections
 // and treat them as immutable.
 //
-// Heavily inspired by Underscore.js, underscore.cpp and Clojure.
+// Heavily inspired by Clojure, Underscore.js, and underscore.cpp.
 //
 // (C) 2014 Arthur Edelstein, arthuredelstein@gmail.com
 // MIT License
 
-#include <vector>
-#include <map>
-#include <functional>
 #include <algorithm>
-#include <random>
 #include <fstream>
-#include <string>
+#include <functional>
 #include <iostream>
+#include <map>
 #include <sstream>
+#include <string>
+#include <random>
 #include <regex>
+#include <vector>
 
 
 // __range(start, end, step)__.
@@ -152,6 +152,15 @@ C shuffle(const C& coll) {
    return result;
 }
 
+// __reverse(coll)__.
+// Reverses the order of elements in the collection.
+template <typename C>
+C reverse(const C& coll) {
+   C result(coll);
+   std::reverse(result.begin(), result.end());
+   return result;
+}
+
 // __filter(coll, predicate)__.
 // Takes a coll of values and returns a coll
 // with only those values where predicate(value) == TRUE.
@@ -236,7 +245,7 @@ typename C::value_type nth(const C& coll, long index, typename C::value_type not
 }
 
 // __cons(coll, item)__.
-// Returns a new coll with item as the first element and rest as old coll.
+// Returns a new coll with item as the first element and rest as input coll.
 template <typename C>
 C cons(const C& coll, typename C::value_type item) {
    C result;
@@ -246,7 +255,7 @@ C cons(const C& coll, typename C::value_type item) {
 }
 
 // __conj(coll, item)__.
-// Returns a new coll with item appended to old coll.
+// Returns a new coll with item appended to input coll.
 template <typename C>
 C conj(const C& coll, typename C::value_type item) {
    C result;
@@ -624,7 +633,7 @@ void spit(const std::string& file, const std::string& content) {
 }
 
 // __slurp(file)__.
-// Read a string from a file.
+// Read a file into a string.
 std::string slurp(const std::string& file) {
    std::ifstream input("file.txt");
    std::stringstream buffer;
