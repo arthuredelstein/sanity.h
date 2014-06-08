@@ -152,14 +152,14 @@ C shuffle(const C& coll) {
    return result;
 }
 
-// __filter(vec, predicate)__.
-// Takes a vector of values and returns a vector
+// __filter(coll, predicate)__.
+// Takes a coll of values and returns a coll
 // with only those values where predicate(value) == TRUE.
-template <class ELEM, typename F>
-std::vector<ELEM> filter(const std::vector<ELEM>& input, const F& predicate) {
-   static_assert(std::is_same<decltype(predicate(*(input.begin()))), bool>::value, "predicate must return a bool");
-   std::vector<ELEM> result;
-   for (const ELEM& element : input) {
+template <typename C, typename F>
+C filter(const C& coll, const F& predicate) {
+   static_assert(std::is_same<decltype(predicate(first(coll))), bool>::value, "predicate must return a bool");
+   C result;
+   for (const auto& element : coll) {
       if (predicate(element)) {
          result.push_back(element);
       }
@@ -167,20 +167,20 @@ std::vector<ELEM> filter(const std::vector<ELEM>& input, const F& predicate) {
    return result;
 }
 
-// __remove(vec, predicate)__.
-// Takes a vector of values and returns a vector
+// __remove(coll, predicate)__.
+// Takes a collection of values and returns a collection
 // with only those values where predicate(value) == FALSE.
-template <class ELEM, typename F>
-std::vector<ELEM> remove(const std::vector<ELEM>& input, const F& predicate) {
-   return filter(input, [&](ELEM elem) { return !predicate(elem); } );
+template <typename C, typename F>
+C remove(const C& coll, const F& predicate) {
+   return filter(coll, [&](decltype(first(coll)) elem) { return !predicate(elem); } );
 }
 
 // __every(vec, predicate)__.
 // Returns true if for every value, predicate(value) == TRUE.
-template <class ELEM, typename F>
-bool every(const std::vector<ELEM>& input, const F& predicate) {
-   static_assert(std::is_same<decltype(predicate(*(input.begin()))), bool>::value, "predicate must return a bool");
-   for (const ELEM& element : input) {
+template <typename C, typename F>
+bool every(const C& coll, const F& predicate) {
+   static_assert(std::is_same<decltype(predicate(first(coll))), bool>::value, "predicate must return a bool");
+   for (const auto& element : coll) {
       if (!predicate(element)) {
          return false;
       }
@@ -190,9 +190,9 @@ bool every(const std::vector<ELEM>& input, const F& predicate) {
 
 // __any(vec, predicate)__.
 // Returns true if for any value, predicate(value) == TRUE.
-template <class ELEM, typename F>
-bool any(const std::vector<ELEM>& input, const F& predicate) {
-   return !every(input, [&](ELEM elem) {return !predicate(elem); } );
+template <typename C, typename F>
+bool any(const C& input, const F& predicate) {
+   return !every(input, [&](decltype(first(coll)) elem) {return !predicate(elem); } );
 }
 
 // __contains(vec, value)__.
