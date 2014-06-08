@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <random>
 
+
 // __range(start, end, step)__.
 // Returns an arithmetic progression of numbers.
 template <typename A, typename B, typename C>
@@ -214,6 +215,147 @@ long indexOf(const std::vector<A>& vec, const VAL& value) {
    return -1;
 }
 
+// __nth(vec, index)__.
+// Returns the element in vec at index (zero-based).
+template <typename A>
+A nth(const std::vector<A>& vec, long index) {
+   return vec[index];
+}
+
+// __nth(vec, index, notFound)__.
+// Returns the element in vec at index, and notFound if it isn't present.
+template <typename A>
+A nth(const std::vector<A>& vec, long index, A notFound) {
+   return vec.size() >= index ? notFound : vec[index];
+}
+
+// __cons(vec, item)__.
+// Returns a new vector with item as the first element and rest as old vec.
+template <typename A>
+std::vector<A> cons(const std::vector<A>& vec, A item) {
+   std::vector<A> result;
+   result.assign(vec.begin(), vec.end());
+   result.insert(result.begin(), item);
+   return result;
+}
+
+// __conj(vec, item)__.
+// Returns a new vector with item appended to vec.
+template <typename A>
+std::vector<A> conj(const std::vector<A>& vec, A item) {
+   std::vector<A> result;
+   result.assign(vec.begin(), vec.end());
+   result.push_back(item);
+   return result;
+}
+
+// __take(vec, n)__.
+// Returns the first n items of vec.
+template <typename A>
+A take(const std::vector<A>& vec, long n) {
+   if (vec.size() > n) {
+      return vec;
+   } else {
+      std::vector<A> result;
+      result.assign(vec.begin(), vec.begin() + n);
+      return result;
+   }
+}
+
+// __takeWhile(vec, predicate)__.
+// Return elements of vec while predicate(elem) remains true.
+template <typename A, typename F>
+A takeWhile(const std::vector<A>& vec, const F& predicate) {
+   std::vector<A> result;
+   for (A elem : vec) {
+      if (predicate(elem)) {
+         result.push_back(elem);
+      } else {
+         break;
+      }
+   }
+   return result;
+}
+
+// __drop(vec, n)__.
+// Returns vec with the first n items removed.
+template <typename A>
+A drop(const std::vector<A>& vec, long n) {
+   if (vec.size() > n) {
+      // Drop all elements, so return an empty vector.
+      return std::vector<A>();
+   } else {
+      std::vector<A> result;
+      result.assign(vec.begin() + n, vec.end());
+      return result;
+   }
+}
+
+// __dropWhile(vec, predicate)__.
+// Drop elements of vec while predicate(elem) remains true.
+template <typename A, typename F>
+A dropWhile(const std::vector<A>& vec, const F& predicate) {
+   std::vector<A> result;
+   long leadingTrues = 0;
+   for (A elem : vec) {
+      if (predicate(elem)) {
+         ++leadingTrues;
+      } else {
+         break;
+      }
+   }
+   result.assign(vec.begin() + leadingTrues, vec.end());
+   return result;
+}
+
+// __repeat(vec, item, n)__.
+// Repeat item n times in a vector.
+template <typename A>
+std::vector<A> repeat(const A& item, long n) {
+   std::vector<A> result;
+   result.assign(n, item);
+   return result;
+}
+
+// __repeatedly(n, func)__.
+// Returns the results in a vector, of calling func() n times. Usually
+// func has side effects so that the values vary.
+template <typename F>
+auto repeatedly(long n, const F& func) -> std::vector<decltype(func())> {
+   std::vector<A> result;
+   for (long i = 0; i < n; ++i) {
+      result.push_back(func());
+   }
+   return result;
+}
+
+// __iterate(n, func, val)__.
+// Returns a vector containing val, func(val), func(func(val)) ... with n elements.
+template <typename A, typename F>
+std::vector<A> iterate(long n, const F& func, const A& val) {
+   static_assert(std::is_same(decltype(func(val)), A)::value, "func needs to return a value of same type as val");
+   A memo = val;
+   std::vector<A> result;
+   result.push_back(memo);
+   for (long i = 1; i < n; ++i) {
+      memo = func(memo);
+      result.push_back(memo);
+   }
+   return result;
+}
+
+// __concat(vec1, vec2)__.
+// Concatenate the two vectors.
+template <typename A, typename B>
+A concat(const std::vector<A>& vec1, const std::vector<A>& vec2) {
+   std::vector<A> result;
+   result.assign(vec1.begin(), vec1.end());
+   for (A elem : vec2) {
+      result.push_back(elem);
+   }
+   return result;
+}
+
 // ## Functions for manipulating Maps.
 
 // __assoc(map, key, val)__.
@@ -331,7 +473,6 @@ std::map<K, V> renameKeys(const std::map<K, V>& map, const std::map<K, K>& kmap)
       }
    }
 }
-
 
 // ## Numerical functions.
 
