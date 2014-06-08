@@ -364,7 +364,7 @@ A concat(const std::vector<A>& vec1, const std::vector<A>& vec2) {
 // __interleave(vec1, vec2)__.
 // Returns a vector of first item in each vector, then the second in each, etc.
 template <typename A>
-std::vector<A> interleave(std::vector<A> vec1, std::vector<A> vec2) {
+std::vector<A> interleave(const std::vector<A>& vec1, const std::vector<A>& vec2) {
    std::vector<A> result;
    int n1 = vec1.size();
    int n2 = vec2.size();
@@ -374,6 +374,15 @@ std::vector<A> interleave(std::vector<A> vec1, std::vector<A> vec2) {
       result.push_back(vec2[i]);
    }
    return result;
+}
+
+// __interpose(vec, separator)__.
+// Returns a vector with separator inserted between each pair of elements in vec.
+template <typename A>
+std::vector<A> interpose(const std::vector<A>& vec, const A& sep) {
+   std::vector<A> result;
+   auto it = vec.begin();
+
 }
 
 // ## Functions for manipulating Maps.
@@ -582,14 +591,8 @@ auto modulo(A a, B b) -> decltype(a % b) {
 
 // ## Strings
 
-std::string str(const std::vector<std::string>& items) {
-   std::stringstream buffer;
-   for (std::string item : items) {
-      buffer << item;
-   }
-   return buffer.str();
-}
-
+// __split(input, regex)__.
+// Split into tokens separated by regex.
 std::vector<std::string> split(const std::string& input, const std::string& regex) {
    std::vector<std::string> result;
    std::sregex_token_iterator iter(input.begin(), input.end(), std::regex(regex), -1);
