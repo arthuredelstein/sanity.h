@@ -53,7 +53,7 @@ std::vector<long> range(A end) {
 // __first(coll)__.
 // Returns the first element in a collection.
 template <typename C>
-auto first(const C& input) -> decltype(input[0]) {
+auto first(const C& input) -> typename C::value_type {
    if (input.empty()) {
       throw std::exception("Collection is empty.");
    }
@@ -70,7 +70,7 @@ C rest(const C& coll) {
 // __last(coll)__.
 // Returns last element in a collection.
 template <typename C>
-auto last(const C& coll) -> decltype(*(coll.end())) {
+auto last(const C& coll) -> typename C::value_type {
    if (coll.empty()) {
       throw std::exception("Vector is empty.");
    }
@@ -79,12 +79,13 @@ auto last(const C& coll) -> decltype(*(coll.end())) {
 
 // __map(coll, func)__.
 // Takes a collection of values of type IN, applies a 
-// function to each of those values and produces a new vector
+// function to each of those values and produces a new collection
 // with the results.
-template <typename C, typename F>
-auto map(const C& input, const F& func) -> std::vector<decltype(func(*(input.begin())))> {
-   std::vector<decltype(func(*(input.begin())))> result;
-   for (auto element : input) {
+template <template <typename, typename> class C, typename A, typename B, typename F>
+auto map(const C<A, B>& coll, const F& func) -> C<decltype(func(first(coll))), std::allocator<decltype(func(first(coll)))> > {
+   typedef decltype(func(first(coll))) elem;
+   C<elem, std::allocator<elem>> result;
+   for (const auto& element : coll) {
       result.push_back(func(element));
    }
    return result;
@@ -105,14 +106,14 @@ OUT reduce(const OUT& init, const C& coll, const F& func) {
 // __reduce(coll, func)__.
 // Takes a collection a func that takes two arguments, both the same type.
 template <typename C, typename F>
-auto reduce(const C& coll, const F& func) -> decltype(first(coll)) {
+typename C::value_type reduce(const C& coll, const F& func) {
    return reduce(first(coll), rest(coll), func);
 }
 
 // __minimum(coll)__.
 // Returns the minimum value in coll.
 template <typename C>
-auto minimum(const C& coll) -> decltype(first(coll)) {
+typename C::value_type minimum(const C& coll) {
    typedef decltype(first(coll)) ELEM;
    return reduce(coll, [](ELEM a, ELEM b) { return a < b ? a : b; } );
 }
@@ -120,9 +121,8 @@ auto minimum(const C& coll) -> decltype(first(coll)) {
 // __maximum(coll)__.
 // Returns the maximum value in coll.
 template <typename C>
-auto maximum(const C& coll) -> decltype(first(coll)) {
-   typedef decltype(first(coll)) ELEM;
-   return reduce(coll, [](ELEM a, ELEM b) { return a > b ? a : b; } );
+typename C::value_type maximum(const C& coll) {
+   return reduce(coll, [](typename C::value_type a, typename C::value_type b) { return a > b ? a : b; } );
 }
 
 // __sort(coll, comparisonFunction)__.
@@ -172,10 +172,10 @@ C filter(const C& coll, const F& predicate) {
 // with only those values where predicate(value) == FALSE.
 template <typename C, typename F>
 C remove(const C& coll, const F& predicate) {
-   return filter(coll, [&](decltype(first(coll)) elem) { return !predicate(elem); } );
+   return filter(coll, [&](typename C::value_type elem) { return !predicate(elem); } );
 }
 
-// __every(vec, predicate)__.
+// __every(coll, predicate)__.
 // Returns true if for every value, predicate(value) == TRUE.
 template <typename C, typename F>
 bool every(const C& coll, const F& predicate) {
@@ -188,18 +188,18 @@ bool every(const C& coll, const F& predicate) {
    return true;
 }
 
-// __any(vec, predicate)__.
+// __any(coll, predicate)__.
 // Returns true if for any value, predicate(value) == TRUE.
 template <typename C, typename F>
 bool any(const C& input, const F& predicate) {
    return !every(input, [&](decltype(first(coll)) elem) {return !predicate(elem); } );
 }
 
-// __contains(vec, value)__.
-// Returns true if vec contains value.
-template <class ELEM, class VAL>
-bool contains(const std::vector<ELEM>& input, const VAL& value) {
-   for (const ELEM& element : input) {
+// __contains(coll, value)__.
+// Returns true if coll contains value.
+template <class C, class VAL>
+bool contains(const C& coll, const VAL& value) {
+   for (const auto& element : coll) {
       if (element == value) {
          return true;
       }
@@ -207,12 +207,12 @@ bool contains(const std::vector<ELEM>& input, const VAL& value) {
    return false;
 }
 
-// __indexOf(vec, value)__.
-// Returns the integer index of the first occurence of value in vec.
-template <typename A, typename VAL>
-long indexOf(const std::vector<A>& vec, const VAL& value) {
+// __indexOf(coll, value)__.
+// Returns the integer index of the first occurence of value in coll.
+template <typename C, typename VAL>
+long indexOf(const C& coll, const VAL& value) {
    long i = 0;
-   for (A elem : vec) {
+   for (auto elem : coll) {
       if (elem == value) {
          return i;
       }
@@ -221,59 +221,59 @@ long indexOf(const std::vector<A>& vec, const VAL& value) {
    return -1;
 }
 
-// __nth(vec, index)__.
-// Returns the element in vec at index (zero-based).
-template <typename A>
-A nth(const std::vector<A>& vec, long index) {
-   return vec[index];
+// __nth(coll, index)__.
+// Returns the nth element in coll at index (zero-based).
+template <typename C>
+typename C::value_type nth(const C& coll, long index) {
+   return coll[index];
 }
 
-// __nth(vec, index, notFound)__.
-// Returns the element in vec at index, and notFound if it isn't present.
-template <typename A>
-A nth(const std::vector<A>& vec, long index, A notFound) {
-   return vec.size() >= index ? notFound : vec[index];
+// __nth(coll, index, notFound)__.
+// Returns the element in coll at index, and notFound if it isn't present.
+template <typename C>
+typename C::value_type nth(const C& coll, long index, typename C::value_type notFound) {
+   return coll.size() >= index ? notFound : coll[index];
 }
 
-// __cons(vec, item)__.
-// Returns a new vector with item as the first element and rest as old vec.
-template <typename A>
-std::vector<A> cons(const std::vector<A>& vec, A item) {
-   std::vector<A> result;
-   result.assign(vec.begin(), vec.end());
+// __cons(coll, item)__.
+// Returns a new coll with item as the first element and rest as old coll.
+template <typename C>
+C cons(const C& coll, typename C::value_type item) {
+   C result;
+   result.assign(coll.begin(), coll.end());
    result.insert(result.begin(), item);
    return result;
 }
 
-// __conj(vec, item)__.
-// Returns a new vector with item appended to vec.
-template <typename A>
-std::vector<A> conj(const std::vector<A>& vec, A item) {
-   std::vector<A> result;
-   result.assign(vec.begin(), vec.end());
+// __conj(coll, item)__.
+// Returns a new coll with item appended to old coll.
+template <typename C>
+C conj(const C& coll, typename C::value_type item) {
+   C result;
+   result.assign(coll.begin(), coll.end());
    result.push_back(item);
    return result;
 }
 
-// __take(vec, n)__.
-// Returns the first n items of vec.
-template <typename A>
-A take(const std::vector<A>& vec, long n) {
-   if (vec.size() > n) {
-      return vec;
+// __take(coll, n)__.
+// Returns the first n items of coll.
+template <typename C>
+C take(const C& coll, long n) {
+   if (coll.size() > n) {
+      return coll;
    } else {
       std::vector<A> result;
-      result.assign(vec.begin(), vec.begin() + n);
+      result.assign(coll.begin(), coll.begin() + n);
       return result;
    }
 }
 
-// __takeWhile(vec, predicate)__.
-// Return elements of vec while predicate(elem) remains true.
-template <typename A, typename F>
-A takeWhile(const std::vector<A>& vec, const F& predicate) {
-   std::vector<A> result;
-   for (A elem : vec) {
+// __takeWhile(coll, predicate)__.
+// Return elements of coll while predicate(elem) remains true.
+template <typename C, typename F>
+C takeWhile(const C& coll, const F& predicate) {
+   C result;
+   for (const auto& elem : coll) {
       if (predicate(elem)) {
          result.push_back(elem);
       } else {
