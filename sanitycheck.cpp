@@ -26,6 +26,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
    x.push_back(-1);
    x.push_back(4);
    auto a = map(x, [](double q) -> double { return 3 * q; });
+   auto a1 = map(range(100), [](double q) -> std::vector<long> { return range((long) q); });
    auto y = filter(map(x, times2), positive);
    auto y1 = filter(x, [](double q) -> bool { return q < 2; });
    auto y2 = remove(x, [](double q) -> bool { return q < 2; });

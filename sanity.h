@@ -262,7 +262,7 @@ C take(const C& coll, long n) {
    if (coll.size() > n) {
       return coll;
    } else {
-      std::vector<A> result;
+      C result;
       result.assign(coll.begin(), coll.begin() + n);
       return result;
    }
@@ -283,42 +283,42 @@ C takeWhile(const C& coll, const F& predicate) {
    return result;
 }
 
-// __drop(vec, n)__.
-// Returns vec with the first n items removed.
-template <typename A>
-A drop(const std::vector<A>& vec, long n) {
-   if (vec.size() > n) {
-      // Drop all elements, so return an empty vector.
-      return std::vector<A>();
+// __drop(coll, n)__.
+// Returns coll with the first n items removed.
+template <typename C>
+C drop(const C& coll, long n) {
+   if (coll.size() > n) {
+      // Drop all elements, so return an empty coll.
+      return C();
    } else {
-      std::vector<A> result;
-      result.assign(vec.begin() + n, vec.end());
+      C result;
+      result.assign(coll.begin() + n, coll.end());
       return result;
    }
 }
 
-// __dropWhile(vec, predicate)__.
-// Drop elements of vec while predicate(elem) remains true.
-template <typename A, typename F>
-A dropWhile(const std::vector<A>& vec, const F& predicate) {
-   std::vector<A> result;
+// __dropWhile(coll, predicate)__.
+// Drop elements of coll while predicate(elem) remains true.
+template <typename C, typename F>
+C dropWhile(const C& coll, const F& predicate) {
+   C result;
    long leadingTrues = 0;
-   for (A elem : vec) {
+   for (auto elem : coll) {
       if (predicate(elem)) {
          ++leadingTrues;
       } else {
          break;
       }
    }
-   result.assign(vec.begin() + leadingTrues, vec.end());
+   result.assign(coll.begin() + leadingTrues, coll.end());
    return result;
 }
 
-// __repeat(vec, item, n)__.
-// Repeat item n times in a vector.
-template <typename A>
-std::vector<A> repeat(const A& item, long n) {
-   std::vector<A> result;
+// __repeat(coll, item, n)__.
+// Repeat item n times in a collection.
+template <typename C>
+C repeat(const C& item, long n) {
+   C result;
    result.assign(n, item);
    return result;
 }
@@ -328,7 +328,7 @@ std::vector<A> repeat(const A& item, long n) {
 // func has side effects so that the values vary.
 template <typename F>
 auto repeatedly(long n, const F& func) -> std::vector<decltype(func())> {
-   std::vector<A> result;
+   std::vector<decltype(func())> result;
    for (long i = 0; i < n; ++i) {
       result.push_back(func());
    }
@@ -336,12 +336,12 @@ auto repeatedly(long n, const F& func) -> std::vector<decltype(func())> {
 }
 
 // __iterate(n, func, val)__.
-// Returns a vector containing val, func(val), func(func(val)) ... with n elements.
-template <typename A, typename F>
-std::vector<A> iterate(long n, const F& func, const A& val) {
+// Returns a collection containing val, func(val), func(func(val)) ... with n elements.
+template <typename C, typename F, typename A>
+C iterate(long n, const F& func, const A& val) {
    static_assert(std::is_same(decltype(func(val)), A)::value, "func needs to return a value of same type as val");
    A memo = val;
-   std::vector<A> result;
+   C result;
    result.push_back(memo);
    for (long i = 1; i < n; ++i) {
       memo = func(memo);
@@ -350,43 +350,62 @@ std::vector<A> iterate(long n, const F& func, const A& val) {
    return result;
 }
 
-// __concat(vec1, vec2)__.
-// Concatenate the two vectors.
-template <typename A, typename B>
-A concat(const std::vector<A>& vec1, const std::vector<A>& vec2) {
-   std::vector<A> result;
+// __concat(coll1, coll2)__.
+// Concatenate the two collections.
+template <typename C1, typename C2>
+C1 concat(const C1& coll1, const C2& coll2) {
+   C1 result;
    result.assign(vec1.begin(), vec1.end());
-   for (A elem : vec2) {
+   for (C2 elem : vec2) {
       result.push_back(elem);
    }
    return result;
 }
 
-// __interleave(vec1, vec2)__.
-// Returns a vector of first item in each vector, then the second in each, etc.
-template <typename A>
-std::vector<A> interleave(const std::vector<A>& vec1, const std::vector<A>& vec2) {
-   std::vector<A> result;
-   int n1 = vec1.size();
-   int n2 = vec2.size();
+// __interleave(coll1, coll2)__.
+// Returns a collection of first item in each collection, then the second in each, etc.
+template <typename C1, typename C2>
+C1 interleave(const C1& coll1, const C2& coll2) {
+   C1 result;
+   int n1 = coll1.size();
+   int n2 = coll2.size();
    int n = min(n1, n2);
    for (int i = 0; i < n; ++i) {
-      result.push_back(vec1[i]);
-      result.push_back(vec2[i]);
+      result.push_back(coll1[i]);
+      result.push_back(coll22[i]);
    }
    return result;
 }
 
-// __interpose(vec, separator)__.
-// Returns a vector with separator inserted between each pair of elements in vec.
-template <typename A>
-std::vector<A> interpose(const std::vector<A>& vec, const A& sep) {
-   std::vector<A> result;
-   auto it = vec.begin();
+// __interpose(coll, separator)__.
+// Returns a collection with separator inserted between each pair of elements in collection.
+template <typename C, typename A>
+C interpose(const C& coll, const A& sep) {
+   C result;
+   result.push_back(first(coll));
+   for (int i = 1 ; i < coll.size(); ++i) {
+      result.push_back(sep);
+      result.push_back(nth(coll, i));
+   }
+   return result;
 
 }
 
 // ## Functions for manipulating Maps.
+
+// __hasKey(map, key)__.
+// Returns true if map contains a key.
+template <typename K, typename V>
+bool hasKey(const std::map<K, V>& map, const K& key) {
+   return kmap.find(key) != kmap.end();
+}
+
+// __get(map, key, notFound)__.
+// Gets the val in map corresponding to key.
+template <typename K, typename V>
+V get(const std::map<K, V>& map, const K& key, V value, V notFound) {
+   return hasKey(map, key) ? map[key] : notFound;
+}
 
 // __assoc(map, key, val)__.
 // Adds a key, val pair to a map.
@@ -398,26 +417,16 @@ std::map<K, V> assoc(const std::map<K, V>& map, const K& key, const V& val) {
 }
 
 // __dissoc(map, key)__.
-// Adds a key, val pair to a map.
+// Removes a key, val pair from a map.
 template <typename K, typename V>
 std::map<K, V> dissoc(const std::map<K, V>& map, const K& key) {
-   std::map<K, V> result(map);
-   delete result[key];
-   return result;
-}
-
-// __hasKey(map, key)__.
-// Returns true if map contains a key.
-template <typename K, typename V>
-bool hasKey(const std::map<K, V>& map, const K& key) {
-   return kmap.find(key) != kmap.end();
-}
-
-// __get(map, key)__.
-// Adds a key, val pair to a map.
-template <typename K, typename V>
-V get(const std::map<K, V>& map, const K& key, V value, V notFound) {
-   return hasKey(map, key) ? map[key] : notFound;
+   if (hasKey(map, key)) {
+      std::map<K, V> result(map);
+      delete result[key];
+      return result;
+   } else {
+      return map;
+   }
 }
 
 // __keys(map)__.
@@ -455,8 +464,8 @@ std::vector<std::pair<K, V>> pairs(const std::map<K, V>& m) {
 
 // __zipmap(keys, vals)__.
 // Returns a map using keys, vals.
-template <typename K, typename V>
-std::map<K, V> zipmap(const std::vector<K>& keys, const std::vector<V>& vals) {
+template <typename CK, typename CV, typename K, typename V>
+std::map<K, V> zipmap(const CK& keys, const CV& vals) {
    int n = keys.size();
    if (n != vals.size()) {
       throw std::exception("keys and vals vectors are different lengths");
