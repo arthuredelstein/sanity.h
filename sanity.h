@@ -53,7 +53,7 @@ std::vector<long> range(A end) {
 // __first(coll)__.
 // Returns the first element in a collection.
 //
-// Example: `first([1,2,3,4]) => 1`
+// `first([1,2,3,4]) => 1`
 template <typename C>
 auto first(const C& input) -> typename C::value_type {
    if (input.empty()) {
@@ -65,7 +65,7 @@ auto first(const C& input) -> typename C::value_type {
 // __rest(coll)__.
 // Takes all but the first element in a collection.
 //
-// Example: `rest([1,2,3,4]) => [2,3,4]`
+// `rest([1,2,3,4]) => [2,3,4]`
 template <typename C>
 C rest(const C& coll) {
    return C(coll.begin() + 1, coll.end());
@@ -74,7 +74,7 @@ C rest(const C& coll) {
 // __last(coll)__.
 // Returns last element in a collection.
 //
-// Example: `last([1,2,3,4]) => 4`
+// `last([1,2,3,4]) => 4`
 template <typename C>
 auto last(const C& coll) -> typename C::value_type {
    if (coll.empty()) {
@@ -88,7 +88,7 @@ auto last(const C& coll) -> typename C::value_type {
 // function to each of those values and produces a new collection
 // with the results.
 //
-// Example: `map([0,1,2,3], dec) => [-1,0,1,2]`
+// `map([0,1,2,3], dec) => [-1,0,1,2]`
 template <template <typename, typename> class C, typename A, typename B, typename F>
 auto map(const C<A, B>& coll, const F& func) -> C<decltype(func(first(coll))), std::allocator<decltype(func(first(coll)))> > {
    typedef decltype(func(first(coll))) elem;
@@ -103,7 +103,7 @@ auto map(const C<A, B>& coll, const F& func) -> C<decltype(func(first(coll))), s
 // Takes an initial value of type OUT, an collection
 // and a func with two arguments: func(OUT, IN).
 //
-// Example: `reduce(1, [1,2,3,4], add) => 11`
+// `reduce(1, [1,2,3,4], add) => 11`
 template <typename OUT, typename C, typename F>
 OUT reduce(const OUT& init, const C& coll, const F& func) {
    OUT memo = init;
@@ -116,7 +116,7 @@ OUT reduce(const OUT& init, const C& coll, const F& func) {
 // __reduce(coll, func)__.
 // Takes a collection a func that takes two arguments, both the same type.
 //
-// Example: `reduce([0,1,2,3,4], subtract) => -10`
+// `reduce([0,1,2,3,4], subtract) => -10`
 template <typename C, typename F>
 typename C::value_type reduce(const C& coll, const F& func) {
    return reduce(first(coll), rest(coll), func);
@@ -125,7 +125,7 @@ typename C::value_type reduce(const C& coll, const F& func) {
 // __minimum(coll)__.
 // Returns the minimum value in coll.
 //
-// Example: `minimum([5,4,6,3,8,7]) => 3`
+// `minimum([5,4,6,3,8,7]) => 3`
 template <typename C>
 typename C::value_type minimum(const C& coll) {
    typedef decltype(first(coll)) ELEM;
@@ -135,7 +135,7 @@ typename C::value_type minimum(const C& coll) {
 // __maximum(coll)__.
 // Returns the maximum value in coll.
 //
-// Example: `minimum([5,4,6,3,8,7]) => 8`
+// `minimum([5,4,6,3,8,7]) => 8`
 template <typename C>
 typename C::value_type maximum(const C& coll) {
    return reduce(coll, [](typename C::value_type a, typename C::value_type b) { return a > b ? a : b; } );
@@ -153,7 +153,7 @@ C sort(const C& coll, const F& comparisonFunction) {
 // __sort(coll)__.
 // Sorts the coll, least to greatest.
 //
-// Example: `sort([5,4,6,3,8,7]) => [3,4,5,6,7,8]`
+// `sort([5,4,6,3,8,7]) => [3,4,5,6,7,8]`
 template <typename C>
 C sort(const C& coll) {
    C result(coll);
@@ -173,7 +173,7 @@ C shuffle(const C& coll) {
 // __reverse(coll)__.
 // Reverses the order of elements in the collection.
 //
-// Example: reverse([5,4,6,3,8,7]) => [7,8,3,6,4,5]
+// reverse([5,4,6,3,8,7]) => [7,8,3,6,4,5]
 template <typename C>
 C reverse(const C& coll) {
    C result(coll);
